@@ -140,6 +140,14 @@ td a{color:var(--gold-lt)}
   </div>
 
   <div class="card">
+    <h2><small>Referrals</small>引薦紀錄</h2>
+    <div class="tbl-wrap"><table style="min-width:520px">
+      <thead><tr><th>時間</th><th>投資人</th><th>作品</th><th>訊息</th></tr></thead>
+      <tbody id="tbReferrals"></tbody>
+    </table></div>
+  </div>
+
+  <div class="card">
     <h2><small>Events</small>事件統計</h2>
     <div class="tbl-wrap"><table style="min-width:380px">
       <thead><tr><th>事件</th><th>次數</th></tr></thead>
@@ -241,10 +249,16 @@ async function load(){
     <td>${acts('investor', c.id)}</td></tr>`).join('')
     : '<tr><td colspan="7" class="empty">尚無申請</td></tr>';
 
+  /* 引薦紀錄 */
+  $('#tbReferrals').innerHTML = (d.referrals||[]).length ? d.referrals.map(r=>`
+    <tr><td>${fmtT(r.created_at)}</td><td>${esc(r.investor)}<br><span style="color:rgba(242,237,227,.5)">${esc(r.email||'')}</span></td>
+    <td>${esc(r.work)}</td><td>${esc(r.message||'—')}</td></tr>`).join('')
+    : '<tr><td colspan="4" class="empty">尚無引薦</td></tr>';
+
   /* 事件統計 */
   const EVT_TXT = {page_view:'頁面瀏覽', dive:'穿越進入展覽', gate_creator:'雙門選擇:創作者',
     gate_investor:'雙門選擇:投資人', gate_skip:'雙門選擇:訪客', submit_creator:'送出創作者申請',
-    submit_investor:'送出投資人申請', back_to_earth:'返回地球'};
+    submit_investor:'送出投資人申請', back_to_earth:'返回地球', login:'會員登入', logout:'會員登出', referral:'發出引薦'};
   const rows = Object.entries(ev).sort((a,b)=> b[1]-a[1]);
   $('#tbEvents').innerHTML = rows.length ? rows.map(([k,v])=>
     `<tr><td>${esc(EVT_TXT[k]||k)}</td><td>${v}</td></tr>`).join('')

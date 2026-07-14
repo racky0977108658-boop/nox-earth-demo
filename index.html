@@ -235,6 +235,31 @@ body.ready .hint{opacity:1}
   border:1px solid rgba(201,169,106,.28);border-radius:999px;padding:10px 18px;transition:all .3s}
 .glink:hover{color:var(--gold-lt);background:rgba(201,169,106,.12)}
 
+/* ── 會員狀態列 ── */
+.member-bar{display:none;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  margin:0 clamp(16px,4vw,48px) 18px;padding:15px 22px;border-radius:12px;
+  background:rgba(201,169,106,.08);border:1px solid rgba(201,169,106,.35);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+.member-bar.on{display:flex}
+.member-bar .mb-id{font-size:14px;letter-spacing:.06em}
+.member-bar .mb-id b{font-weight:400;color:var(--gold-lt)}
+.member-bar .chip2{display:inline-block;font-size:11px;letter-spacing:.14em;padding:3px 12px;
+  border-radius:999px;margin-left:10px;border:1px solid rgba(201,169,106,.5);color:var(--gold-lt)}
+.member-bar .chip2.ok{border-color:rgba(123,175,142,.6);color:#9fd0b2}
+.member-bar .chip2.no{border-color:rgba(199,123,107,.6);color:#e0a294}
+.mb-out{font-family:inherit;font-size:12px;letter-spacing:.16em;cursor:pointer;
+  color:rgba(242,237,227,.6);background:none;border:none;text-decoration:underline;text-underline-offset:3px}
+.mb-out:hover{color:var(--gold-lt)}
+
+/* ── 引薦按鈕(僅投資人可見) ── */
+.refer{display:none;font-family:inherit;font-size:12px;letter-spacing:.14em;cursor:pointer;margin-top:14px;
+  color:var(--gold-lt);background:rgba(201,169,106,.1);
+  border:1px solid rgba(201,169,106,.45);border-radius:999px;padding:8px 18px;transition:all .3s}
+body.role-investor .refer{display:inline-block}
+.refer:hover{background:rgba(201,169,106,.2)}
+.refer.sent{color:#9fd0b2;border-color:rgba(123,175,142,.55);pointer-events:none}
+.refer:disabled{opacity:.45;cursor:not-allowed}
+
 :focus-visible{outline:1px solid var(--gold-lt);outline-offset:2px}
 ::selection{background:rgba(201,169,106,.4)}
 
@@ -262,6 +287,7 @@ body.ready .hint{opacity:1}
     <button data-dive data-dest="wall">作品牆</button>
     <button data-dive data-dest="investor">投資人專區</button>
     <button data-dive data-dest="about">關於</button>
+    <button id="navLogin">登入</button>
   </nav>
 </header>
 
@@ -279,18 +305,20 @@ body.ready .hint{opacity:1}
   <div class="g-head">
     <h2><span>The Wall</span>作品牆</h2>
     <div class="g-actions">
+      <button class="glink" id="gLogin">登入</button>
       <button class="glink" id="gNavTerms">安全條例</button>
       <button class="glink" id="gNavJoin">註冊</button>
       <button class="back" id="backBtn">← 返回地球</button>
     </div>
   </div>
+  <div class="member-bar" id="memberBar"></div>
   <div class="g-grid">
-    <div class="work"><div class="cover c1"></div><div class="meta"><div class="tag">3D / WebGL</div><h3>恆域深空</h3><p>捲動敘事黑洞之旅——程序化金屬著色與粒子軌道。</p></div></div>
-    <div class="work"><div class="cover c2"></div><div class="meta"><div class="tag">AI / Product</div><h3>策展之眼</h3><p>以視覺語言模型輔助的作品初篩工作流。</p></div></div>
-    <div class="work"><div class="cover c3"></div><div class="meta"><div class="tag">Interactive</div><h3>夜之絲絹</h3><p>指尖撫過即泛起漣漪的絲綢著色器實驗。</p></div></div>
-    <div class="work"><div class="cover c4"></div><div class="meta"><div class="tag">Art / Archive</div><h3>畫廊備忘錄</h3><p>實體展覽的沉浸式數位典藏。</p></div></div>
-    <div class="work"><div class="cover c5"></div><div class="meta"><div class="tag">Sound</div><h3>潮汐頻率</h3><p>由即時海洋資料驅動的生成式聲景。</p></div></div>
-    <div class="work"><div class="cover c6"></div><div class="meta"><div class="tag">Film</div><h3>金色殘響</h3><p>AI 輔助分鏡的短片前導概念。</p></div></div>
+    <div class="work"><div class="cover c1"></div><div class="meta"><div class="tag">3D / WebGL</div><h3>恆域深空</h3><p>捲動敘事黑洞之旅——程序化金屬著色與粒子軌道。</p><button class="refer" data-work="恆域深空">發出引薦</button></div></div>
+    <div class="work"><div class="cover c2"></div><div class="meta"><div class="tag">AI / Product</div><h3>策展之眼</h3><p>以視覺語言模型輔助的作品初篩工作流。</p><button class="refer" data-work="策展之眼">發出引薦</button></div></div>
+    <div class="work"><div class="cover c3"></div><div class="meta"><div class="tag">Interactive</div><h3>夜之絲絹</h3><p>指尖撫過即泛起漣漪的絲綢著色器實驗。</p><button class="refer" data-work="夜之絲絹">發出引薦</button></div></div>
+    <div class="work"><div class="cover c4"></div><div class="meta"><div class="tag">Art / Archive</div><h3>畫廊備忘錄</h3><p>實體展覽的沉浸式數位典藏。</p><button class="refer" data-work="畫廊備忘錄">發出引薦</button></div></div>
+    <div class="work"><div class="cover c5"></div><div class="meta"><div class="tag">Sound</div><h3>潮汐頻率</h3><p>由即時海洋資料驅動的生成式聲景。</p><button class="refer" data-work="潮汐頻率">發出引薦</button></div></div>
+    <div class="work"><div class="cover c6"></div><div class="meta"><div class="tag">Film</div><h3>金色殘響</h3><p>AI 輔助分鏡的短片前導概念。</p><button class="refer" data-work="金色殘響">發出引薦</button></div></div>
   </div>
   <section class="about" id="about">
     <span class="p-tag">About NOX</span>
@@ -351,6 +379,20 @@ body.ready .hint{opacity:1}
       <div class="art"><h4>檢舉與除名</h4><p>冒名、虛假陳述、騷擾或規避引薦機制之行為,一經查證即停權除名,並保留法律追訴權。</p></div>
       <div class="art"><h4>免責聲明</h4><p>投資決策與盡職調查責任由使用者自行承擔。平台就媒合結果不負擔保責任。</p></div>
     </div>
+  </div>
+</div>
+
+<div class="modal" id="mLogin">
+  <div class="panel">
+    <button class="m-close">✕</button>
+    <span class="p-tag">Member</span>
+    <h3>會員登入</h3>
+    <p class="p-sub">以已驗證的身分進入,體驗角色視角。</p>
+    <div class="field"><label>EMAIL</label><input type="email" id="liEmail" placeholder="you@example.com" autocomplete="username"></div>
+    <div class="field"><label>密碼</label><input type="password" id="liPass" placeholder="••••••••" autocomplete="current-password"></div>
+    <button class="submit" id="liBtn">登入</button>
+    <p class="p-note" id="liErr" style="min-height:18px"></p>
+    <p class="p-note">還沒有帳號?先送出創作者或投資人申請,通過驗證後由策展團隊開通。</p>
   </div>
 </div>
 
@@ -953,6 +995,103 @@ $('#gNavJoin').addEventListener('click', ()=> $('#gate').classList.add('on'));
 $('#aboutJoin').addEventListener('click', ()=> $('#gate').classList.add('on'));
 document.querySelectorAll('[data-terms]').forEach(b=> b.addEventListener('click', ()=> openModal('#mTerms')));
 $('#backBtn').addEventListener('click', ()=>{ sbEvent('back_to_earth'); closeAllOverlays(); });
+
+/* ═══════════════ 會員系統 ═══════════════ */
+function sbRpc(fn, body){
+  return fetch(SB_URL+'/rest/v1/rpc/'+fn, {method:'POST',
+    headers:{'Content-Type':'application/json', apikey:SB_KEY, Authorization:'Bearer '+SB_KEY},
+    body:JSON.stringify(body)}).then(async r=>{
+      if(!r.ok) throw new Error(await r.text());
+      return r.json();
+    });
+}
+let USER = null;
+try{ USER = JSON.parse(sessionStorage.getItem('nox_user')||'null'); }catch(e){}
+
+const STATUS_TXT = {pending:'審核中', approved:'已核准', rejected:'已婉拒'};
+function applyUser(){
+  document.body.classList.toggle('role-investor', !!USER && USER.role==='investor' && USER.app_status==='approved');
+  const label = USER ? '登出' : '登入';
+  $('#navLogin').textContent = label;
+  $('#gLogin').textContent = USER ? (USER.name+' · 登出') : '登入';
+  const bar = $('#memberBar');
+  if(!USER){ bar.classList.remove('on'); bar.innerHTML=''; return; }
+  let stHtml;
+  if(USER.role==='creator'){
+    const st = USER.app_status;
+    stHtml = st ? `作品申請狀態<span class="chip2 ${st==='approved'?'ok':st==='rejected'?'no':''}">${STATUS_TXT[st]}</span>`
+                : `尚未提交作品申請`;
+    bar.innerHTML = `<div class="mb-id">以創作者身分登入:<b>${USER.name}</b> · ${stHtml}</div>
+      <button class="mb-out" id="mbOut">登出</button>`;
+  }else{
+    const ok = USER.app_status==='approved';
+    stHtml = `白名單<span class="chip2 ${ok?'ok':'no'}">${ok?'已通過 L2':'尚未通過'}</span>`;
+    const rn = (USER.referrals||[]).length;
+    bar.innerHTML = `<div class="mb-id">以投資人身分登入:<b>${USER.name}</b> · ${stHtml}${rn?` · 已發出 ${rn} 筆引薦`:''}</div>
+      <button class="mb-out" id="mbOut">登出</button>`;
+  }
+  bar.classList.add('on');
+  $('#mbOut').addEventListener('click', doLogout);
+  /* 已引薦的作品標記 */
+  const sent = new Set((USER.referrals||[]).map(r=>r.work));
+  document.querySelectorAll('.refer').forEach(b=>{
+    if(sent.has(b.dataset.work)){ b.classList.add('sent'); b.textContent='已引薦 ✓'; }
+  });
+}
+async function refreshUser(){
+  if(!USER) return applyUser();
+  try{
+    const me = await sbRpc('demo_user_me', {tk: USER.token});
+    USER = Object.assign({}, USER, me);
+    sessionStorage.setItem('nox_user', JSON.stringify(USER));
+  }catch(e){ USER=null; sessionStorage.removeItem('nox_user'); }
+  applyUser();
+}
+function doLogout(){
+  if(USER) sbRpc('demo_user_logout', {tk: USER.token}).catch(()=>{});
+  sbEvent('logout');
+  USER = null; sessionStorage.removeItem('nox_user'); applyUser();
+}
+function loginOrOut(){
+  if(USER) doLogout(); else openModal('#mLogin');
+}
+$('#navLogin').addEventListener('click', loginOrOut);
+$('#gLogin').addEventListener('click', loginOrOut);
+$('#liBtn').addEventListener('click', async ()=>{
+  const em = $('#liEmail').value.trim(), pw = $('#liPass').value;
+  const err = $('#liErr'); err.textContent='';
+  if(!em || !pw){ err.textContent='請輸入 Email 與密碼'; return; }
+  $('#liBtn').disabled = true; $('#liBtn').textContent='登入中…';
+  try{
+    const u = await sbRpc('demo_user_login', {em, pw});
+    USER = u; sessionStorage.setItem('nox_user', JSON.stringify(u));
+    sbEvent('login', {role: u.role});
+    await refreshUser();
+    $('#mLogin').classList.remove('on');
+    $('#liEmail').value = $('#liPass').value = '';
+  }catch(e){ err.textContent = '帳號或密碼錯誤'; }
+  $('#liBtn').disabled = false; $('#liBtn').textContent='登入';
+});
+$('#liPass').addEventListener('keydown', e=>{ if(e.key==='Enter') $('#liBtn').click(); });
+
+/* 引薦 */
+document.querySelectorAll('.refer').forEach(b=>{
+  b.addEventListener('click', async ()=>{
+    if(!USER){ openModal('#mLogin'); return; }
+    b.disabled = true; b.textContent='送出中…';
+    try{
+      await sbRpc('demo_user_refer', {tk: USER.token, wt: b.dataset.work, msg: null});
+      sbEvent('referral', {work: b.dataset.work});
+      b.disabled=false; b.classList.add('sent'); b.textContent='已引薦 ✓';
+      (USER.referrals = USER.referrals||[]).push({work:b.dataset.work});
+      applyUser();
+    }catch(e){
+      b.disabled=false;
+      b.textContent = String(e.message||'').includes('not_whitelisted') ? '需通過 L2 驗證' : '重試引薦';
+    }
+  });
+});
+refreshUser();
 
 /* 表單:必填驗證 + 成功狀態(原型示意,正式版接 Supabase) */
 document.querySelectorAll('.reg').forEach(reg=>{
