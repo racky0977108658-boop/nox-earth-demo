@@ -545,6 +545,8 @@ body.role-investor .refer{display:inline-block}
 <script>
 'use strict';
 window.onerror = function(msg, src, line){
+  // 跨域腳本的匿名錯誤(常見於 VPN/內容阻擋器注入)只記 console,不干擾畫面
+  if(String(msg).indexOf('Script error') === 0 && !line){ console.warn('cross-origin noise:', msg); return; }
   var d=document.createElement('div');
   d.style.cssText='position:fixed;left:12px;right:12px;bottom:12px;z-index:99;background:rgba(120,20,20,.92);color:#fff;font:13px/1.5 monospace;padding:12px 16px;border-radius:8px;word-break:break-all';
   d.textContent='ERR: '+msg+' @'+line;
