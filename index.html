@@ -435,25 +435,30 @@ const SUN = new THREE.Vector3(1.9, .7, 1.1).normalize();
 /* ── 星空(雙層,微閃爍) ── */
 function makeStars(count, spread, size, tint){
   const g = new THREE.BufferGeometry();
-  const pos = new Float32Array(count*3), ph = new Float32Array(count);
+  const pos = new Float32Array(count*3), ph = new Float32Array(count),
+        sp = new Float32Array(count), sc = new Float32Array(count);
   for(let i=0;i<count;i++){
     const th = Math.random()*6.2832, z = Math.random()*2-1, rr = Math.sqrt(1-z*z);
     const v = new THREE.Vector3(rr*Math.cos(th), rr*Math.sin(th), z).multiplyScalar(spread*(0.6+Math.random()*0.4));
     pos.set([v.x,v.y,v.z], i*3);
     ph[i] = Math.random()*6.283;
+    sp[i] = .5 + Math.random()*2.1;          // 每顆星自己的閃爍速度
+    sc[i] = .55 + Math.random()*1.15;        // 每顆星自己的大小
   }
   g.setAttribute('position', new THREE.BufferAttribute(pos,3));
   g.setAttribute('aPhase', new THREE.BufferAttribute(ph,1));
+  g.setAttribute('aSpeed', new THREE.BufferAttribute(sp,1));
+  g.setAttribute('aScale', new THREE.BufferAttribute(sc,1));
   const m = new THREE.ShaderMaterial({
     transparent:true, depthWrite:false, blending:THREE.AdditiveBlending,
     uniforms:{uTime:{value:0}, uSize:{value:size*DPR}, uTint:{value:new THREE.Color(tint)}},
     vertexShader:`
-      attribute float aPhase; varying float vTw;
+      attribute float aPhase,aSpeed,aScale; varying float vTw;
       uniform float uTime,uSize;
       void main(){
-        vTw = .55 + .45*sin(uTime*.8 + aPhase);
+        vTw = .3 + .7*(.5 + .5*sin(uTime*aSpeed + aPhase));
         vec4 mv = modelViewMatrix*vec4(position,1.);
-        gl_PointSize = uSize*(180./-mv.z);
+        gl_PointSize = uSize*aScale*(180./-mv.z);
         gl_Position = projectionMatrix*mv;
       }`,
     fragmentShader:`
@@ -469,6 +474,29 @@ function makeStars(count, spread, size, tint){
 const stars1 = makeStars(2600, 46, 1.6, '#dfe8ef');
 const stars2 = makeStars(500, 40, 2.6, '#e8d5a8');
 sceneA.add(stars1, stars2);
+
+/* ── 流星 ── */
+const meteorMat = new THREE.LineBasicMaterial({color:0xEAF2FF, transparent:true, opacity:0,
+  blending:THREE.AdditiveBlending, depthWrite:false});
+const meteorGeo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]);
+sceneA.add(new THREE.Line(meteorGeo, meteorMat));
+let mT=1e9, mDur=1, mNext=3.5;
+const mPos=new THREE.Vector3(), mDir=new THREE.Vector3();
+function updateMeteor(dt){
+  mNext -= dt;
+  if(mNext<=0){
+    mT=0; mDur=.9+Math.random()*.7; mNext=4+Math.random()*8;
+    mPos.set((Math.random()*2-1)*22, 6+Math.random()*13, -18-Math.random()*14);
+    mDir.set(-(.5+Math.random()*.8), -(.35+Math.random()*.5), 0).normalize();
+  }
+  if(mT<mDur){
+    mT+=dt;
+    mPos.addScaledVector(mDir, dt*26);
+    const tail = mPos.clone().addScaledVector(mDir, -2.8);
+    meteorGeo.setFromPoints([mPos, tail]);
+    meteorMat.opacity = Math.sin(Math.min(mT/mDur,1)*3.1416)*.75;
+  } else meteorMat.opacity = 0;
+}
 
 /* ── 貼圖 ── */
 const manager = new THREE.LoadingManager();
@@ -672,6 +700,9 @@ function loopA(){
   const t = clockA.elapsedTime;
   stars1.material.uniforms.uTime.value = t;
   stars2.material.uniforms.uTime.value = t;
+  stars1.rotation.y += dt*.0045; stars1.rotation.x += dt*.0011;   // 遠層慢漂
+  stars2.rotation.y -= dt*.009;                                    // 近層反向 → 視差
+  if(!reduced) updateMeteor(dt);
 
   if(state==='loading'){ rA.render(sceneA,cam); return; }
 
@@ -888,12 +919,13 @@ document.querySelectorAll('.modal').forEach(m=>{
 addEventListener('keydown', e=>{ if(e.key==='Escape') closeAllOverlays(); });
 
 function handleDest(){
-  if(pendingDest==='investor'){ gateSeen=true; openModal('#mInvestor'); }
+  const wait = reduced ? 0 : 800;                 // 等金白閃光散去,出場動畫才看得見
+  if(pendingDest==='investor'){ gateSeen=true; setTimeout(()=> openModal('#mInvestor'), wait); }
   else if(pendingDest==='about'){
     gateSeen=true;
-    setTimeout(()=> $('#about').scrollIntoView({behavior: reduced?'auto':'smooth'}), 450);
+    setTimeout(()=> $('#about').scrollIntoView({behavior: reduced?'auto':'smooth'}), wait);
   }
-  else if(!gateSeen){ $('#gate').classList.add('on'); }
+  else if(!gateSeen){ setTimeout(()=> $('#gate').classList.add('on'), wait); }
   pendingDest='wall';
 }
 
