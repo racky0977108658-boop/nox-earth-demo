@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>NOX — 管理後台</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23050B07'/%3E%3Ctext x='32' y='45' font-size='38' text-anchor='middle' fill='%23C9A96A' font-family='Georgia,serif'%3EN%3C/text%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#050B07;--forest:#0E1F17;--bone:#F2EDE3;--gold:#C9A96A;--gold-lt:#E8D5A8;
+  --ok:#7BAF8E;--warn:#C9A96A;--bad:#C77B6B}
+*{margin:0;padding:0;box-sizing:border-box}
+body{min-height:100vh;color:var(--bone);
+  font-family:'Newsreader','Songti TC','Noto Serif TC',serif;-webkit-font-smoothing:antialiased;
+  background:radial-gradient(130% 100% at 80% -10%, #12291d 0%, var(--ink) 55%), var(--ink)}
+button{font-family:inherit;cursor:pointer}
+
+/* 登入 */
+#login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:22px}
+.login-card{width:min(400px,100%);padding:44px 38px;border-radius:18px;text-align:center;
+  background:rgba(14,31,23,.55);border:1px solid rgba(201,169,106,.35);
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px)}
+.login-card .mark{font-size:14px;letter-spacing:.55em;color:var(--gold);padding-left:.55em;margin-bottom:8px}
+.login-card h1{font-weight:300;font-size:26px;margin-bottom:26px}
+.login-card input{width:100%;font-family:inherit;font-size:16px;color:var(--bone);text-align:center;
+  letter-spacing:.15em;padding:14px;border-radius:10px;outline:none;
+  background:rgba(5,11,7,.5);border:1px solid rgba(242,237,227,.2)}
+.login-card input:focus{border-color:rgba(201,169,106,.7)}
+.login-card .go{width:100%;margin-top:16px;font-size:14px;letter-spacing:.24em;color:#1a1408;
+  background:linear-gradient(135deg,var(--gold-lt),var(--gold));border:none;padding:14px;border-radius:10px}
+.login-err{margin-top:14px;font-size:13px;color:var(--bad);min-height:18px}
+
+/* 主框架 */
+#app{display:none;max-width:1180px;margin:0 auto;padding:26px clamp(14px,3vw,34px) 80px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:26px}
+.topbar .t{font-size:15px;letter-spacing:.4em;color:var(--gold)}
+.topbar .t b{color:var(--bone);font-weight:400}
+.top-acts{display:flex;gap:10px}
+.pill{font-size:12.5px;letter-spacing:.15em;color:var(--bone);padding:10px 20px;border-radius:999px;
+  background:rgba(242,237,227,.05);border:1px solid rgba(201,169,106,.3)}
+.pill:hover{background:rgba(201,169,106,.13)}
+
+.grid-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:14px}
+.stat{padding:22px;border-radius:14px;background:rgba(14,31,23,.5);border:1px solid rgba(201,169,106,.24)}
+.stat .k{font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--gold)}
+.stat .v{font-size:34px;font-weight:300;margin-top:8px}
+.stat .s{font-size:12px;color:rgba(242,237,227,.45);margin-top:4px}
+
+.card{padding:24px;border-radius:14px;margin-bottom:14px;
+  background:rgba(14,31,23,.5);border:1px solid rgba(201,169,106,.24)}
+.card h2{font-weight:400;font-size:18px;letter-spacing:.1em;margin-bottom:16px}
+.card h2 small{font-size:11px;letter-spacing:.3em;color:var(--gold);display:block;margin-bottom:4px;text-transform:uppercase}
+
+/* 圖表 */
+.chart{display:flex;align-items:flex-end;gap:6px;height:120px}
+.chart .bar{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:6px;height:100%}
+.chart .bar i{display:block;width:100%;border-radius:4px 4px 0 0;min-height:2px;
+  background:linear-gradient(180deg,var(--gold-lt),rgba(201,169,106,.25))}
+.chart .bar span{font-size:9.5px;letter-spacing:.05em;color:rgba(242,237,227,.4)}
+.chart .bar b{font-size:11px;font-weight:400;color:var(--gold-lt)}
+
+/* 表格 */
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:680px}
+th{font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);
+  text-align:left;padding:10px 12px;border-bottom:1px solid rgba(201,169,106,.28)}
+td{padding:12px;border-bottom:1px solid rgba(242,237,227,.07);vertical-align:top;
+  color:rgba(242,237,227,.85);line-height:1.5;word-break:break-word}
+td a{color:var(--gold-lt)}
+.chip{display:inline-block;font-size:11px;letter-spacing:.14em;padding:4px 12px;border-radius:999px;white-space:nowrap}
+.chip.pending{color:var(--warn);border:1px solid rgba(201,169,106,.5)}
+.chip.approved{color:var(--ok);border:1px solid rgba(123,175,142,.55)}
+.chip.rejected{color:var(--bad);border:1px solid rgba(199,123,107,.55)}
+.act{font-size:11.5px;letter-spacing:.1em;padding:6px 12px;border-radius:8px;margin:2px 4px 2px 0;
+  background:rgba(242,237,227,.05);border:1px solid rgba(242,237,227,.18);color:var(--bone)}
+.act:hover{border-color:var(--gold)}
+.empty{padding:22px 12px;font-size:13.5px;color:rgba(242,237,227,.4)}
+
+/* 設定 */
+.set-row{display:flex;gap:10px;flex-wrap:wrap}
+.set-row input{flex:1;min-width:200px;font-family:inherit;font-size:14.5px;color:var(--bone);
+  padding:11px 14px;border-radius:9px;outline:none;
+  background:rgba(5,11,7,.5);border:1px solid rgba(242,237,227,.2)}
+.set-row .go2{font-size:12.5px;letter-spacing:.18em;color:#1a1408;border:none;padding:11px 22px;border-radius:9px;
+  background:linear-gradient(135deg,var(--gold-lt),var(--gold))}
+.msg{margin-top:10px;font-size:12.5px;min-height:16px}
+.msg.ok{color:var(--ok)} .msg.err{color:var(--bad)}
+#refreshNote{font-size:11.5px;letter-spacing:.12em;color:rgba(242,237,227,.35)}
+</style>
+</head>
+<body>
+
+<div id="login">
+  <div class="login-card">
+    <div class="mark">NOX</div>
+    <h1>管理後台</h1>
+    <input id="pw" type="password" placeholder="通行碼" autocomplete="current-password">
+    <button class="go" id="loginBtn">登入</button>
+    <div class="login-err" id="loginErr"></div>
+  </div>
+</div>
+
+<div id="app">
+  <div class="topbar">
+    <div class="t">NOX <b>·</b> ADMIN</div>
+    <div class="top-acts">
+      <span id="refreshNote"></span>
+      <button class="pill" id="refreshBtn">重新整理</button>
+      <button class="pill" id="logoutBtn">登出</button>
+    </div>
+  </div>
+
+  <div class="grid-stats">
+    <div class="stat"><div class="k">頁面瀏覽</div><div class="v" id="sViews">–</div><div class="s">累計 page_view</div></div>
+    <div class="stat"><div class="k">穿越次數</div><div class="v" id="sDives">–</div><div class="s">進入展覽的轉場</div></div>
+    <div class="stat"><div class="k">創作者申請</div><div class="v" id="sCreators">–</div><div class="s" id="sCreatorsSub"></div></div>
+    <div class="stat"><div class="k">投資人申請</div><div class="v" id="sInvestors">–</div><div class="s" id="sInvestorsSub"></div></div>
+  </div>
+
+  <div class="card">
+    <h2><small>Traffic</small>近 14 天瀏覽</h2>
+    <div class="chart" id="chart"></div>
+  </div>
+
+  <div class="card">
+    <h2><small>Creator · L1</small>創作者申請</h2>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>時間</th><th>姓名</th><th>Email</th><th>作品</th><th>類別 / 自介</th><th>狀態</th><th>操作</th></tr></thead>
+      <tbody id="tbCreators"></tbody>
+    </table></div>
+  </div>
+
+  <div class="card">
+    <h2><small>Investor · L2</small>投資人申請</h2>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>時間</th><th>姓名</th><th>Email</th><th>機構</th><th>關注領域</th><th>狀態</th><th>操作</th></tr></thead>
+      <tbody id="tbInvestors"></tbody>
+    </table></div>
+  </div>
+
+  <div class="card">
+    <h2><small>Events</small>事件統計</h2>
+    <div class="tbl-wrap"><table style="min-width:380px">
+      <thead><tr><th>事件</th><th>次數</th></tr></thead>
+      <tbody id="tbEvents"></tbody>
+    </table></div>
+  </div>
+
+  <div class="card">
+    <h2><small>Settings</small>變更通行碼</h2>
+    <div class="set-row">
+      <input id="npw" type="password" placeholder="新通行碼(至少 8 碼)" autocomplete="new-password">
+      <button class="go2" id="cpBtn">更新</button>
+    </div>
+    <div class="msg" id="cpMsg"></div>
+  </div>
+</div>
+
+<script>
+'use strict';
+const SB_URL = 'https://ujkzgglmhhumwrbvndum.supabase.co';
+const SB_KEY = 'sb_publishable_MtJVJQoQoZ_diLrWScEhng_e7m4uroS';
+let PASS = sessionStorage.getItem('nox_admin_p') || '';
+
+async function rpc(fn, body){
+  const r = await fetch(`${SB_URL}/rest/v1/rpc/${fn}`, {
+    method:'POST',
+    headers:{'Content-Type':'application/json', apikey:SB_KEY, Authorization:'Bearer '+SB_KEY},
+    body: JSON.stringify(body)
+  });
+  if(!r.ok) throw new Error(await r.text());
+  return r.json();
+}
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmtT = iso => { const d = new Date(iso);
+  return `${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`; };
+const STATUS_TXT = {pending:'待審核', approved:'已核准', rejected:'已婉拒'};
+
+/* ── 登入 ── */
+const $ = s => document.querySelector(s);
+async function tryLogin(p){
+  const ok = await rpc('demo_admin_check', {p});
+  if(ok !== true) throw new Error('bad pass');
+  PASS = p; sessionStorage.setItem('nox_admin_p', p);
+  $('#login').style.display = 'none';
+  $('#app').style.display = 'block';
+  await load();
+}
+$('#loginBtn').addEventListener('click', async ()=>{
+  $('#loginErr').textContent = '';
+  try{ await tryLogin($('#pw').value); }
+  catch(e){ $('#loginErr').textContent = '通行碼錯誤或連線失敗'; }
+});
+$('#pw').addEventListener('keydown', e=>{ if(e.key==='Enter') $('#loginBtn').click(); });
+$('#logoutBtn').addEventListener('click', ()=>{
+  sessionStorage.removeItem('nox_admin_p'); location.reload();
+});
+$('#refreshBtn').addEventListener('click', ()=> load());
+
+/* ── 資料載入與渲染 ── */
+async function load(){
+  const d = await rpc('demo_admin_data', {p: PASS});
+  const ev = d.event_totals || {};
+  $('#sViews').textContent    = ev.page_view || 0;
+  $('#sDives').textContent    = ev.dive || 0;
+  $('#sCreators').textContent = d.creators.length;
+  $('#sInvestors').textContent= d.investors.length;
+  $('#sCreatorsSub').textContent  = `待審核 ${d.creators.filter(x=>x.status==='pending').length}`;
+  $('#sInvestorsSub').textContent = `待審核 ${d.investors.filter(x=>x.status==='pending').length}`;
+
+  /* 近 14 天長條圖 */
+  const map = {}; (d.daily_views||[]).forEach(x=> map[x.d] = x.n);
+  const bars = [];
+  let maxN = 1;
+  for(let i=13;i>=0;i--){
+    const dt = new Date(Date.now() - i*864e5);
+    const key = dt.toISOString().slice(0,10);
+    const n = map[key] || 0; maxN = Math.max(maxN, n);
+    bars.push({label:`${dt.getMonth()+1}/${dt.getDate()}`, n});
+  }
+  $('#chart').innerHTML = bars.map(b=>
+    `<div class="bar"><b>${b.n||''}</b><i style="height:${Math.max(2, b.n/maxN*86)}%"></i><span>${b.label}</span></div>`).join('');
+
+  /* 申請表 */
+  const acts = (kind,id) => `
+    <button class="act" data-st="approved" data-kind="${kind}" data-id="${id}">核准</button>
+    <button class="act" data-st="rejected" data-kind="${kind}" data-id="${id}">婉拒</button>
+    <button class="act" data-st="pending"  data-kind="${kind}" data-id="${id}">重審</button>`;
+  $('#tbCreators').innerHTML = d.creators.length ? d.creators.map(c=>`
+    <tr><td>${fmtT(c.created_at)}</td><td>${esc(c.name)}</td><td>${esc(c.email)}</td>
+    <td><a href="${esc(c.work_url)}" target="_blank" rel="noopener noreferrer">連結 ↗</a></td>
+    <td>${esc(c.category||'—')}${c.bio ? '<br><span style="color:rgba(242,237,227,.5)">'+esc(c.bio)+'</span>' : ''}</td>
+    <td><span class="chip ${c.status}">${STATUS_TXT[c.status]}</span></td>
+    <td>${acts('creator', c.id)}</td></tr>`).join('')
+    : '<tr><td colspan="7" class="empty">尚無申請</td></tr>';
+  $('#tbInvestors').innerHTML = d.investors.length ? d.investors.map(c=>`
+    <tr><td>${fmtT(c.created_at)}</td><td>${esc(c.name)}</td><td>${esc(c.email)}</td>
+    <td>${esc(c.org||'—')}</td><td>${esc(c.focus||'—')}</td>
+    <td><span class="chip ${c.status}">${STATUS_TXT[c.status]}</span></td>
+    <td>${acts('investor', c.id)}</td></tr>`).join('')
+    : '<tr><td colspan="7" class="empty">尚無申請</td></tr>';
+
+  /* 事件統計 */
+  const EVT_TXT = {page_view:'頁面瀏覽', dive:'穿越進入展覽', gate_creator:'雙門選擇:創作者',
+    gate_investor:'雙門選擇:投資人', gate_skip:'雙門選擇:訪客', submit_creator:'送出創作者申請',
+    submit_investor:'送出投資人申請', back_to_earth:'返回地球'};
+  const rows = Object.entries(ev).sort((a,b)=> b[1]-a[1]);
+  $('#tbEvents').innerHTML = rows.length ? rows.map(([k,v])=>
+    `<tr><td>${esc(EVT_TXT[k]||k)}</td><td>${v}</td></tr>`).join('')
+    : '<tr><td colspan="2" class="empty">尚無事件</td></tr>';
+
+  $('#refreshNote').textContent = '更新於 ' + new Date().toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit'});
+}
+
+/* 審核操作(事件代理) */
+document.addEventListener('click', async e=>{
+  const b = e.target.closest('.act'); if(!b) return;
+  b.disabled = true;
+  try{
+    await rpc('demo_admin_set_status', {p:PASS, kind:b.dataset.kind, rid:b.dataset.id, st:b.dataset.st});
+    await load();
+  }catch(err){ alert('操作失敗,請重試'); b.disabled = false; }
+});
+
+/* 變更通行碼 */
+$('#cpBtn').addEventListener('click', async ()=>{
+  const np = $('#npw').value, m = $('#cpMsg');
+  m.className = 'msg';
+  if(np.length < 8){ m.textContent = '至少 8 碼'; m.classList.add('err'); return; }
+  try{
+    await rpc('demo_admin_change_pass', {p:PASS, np});
+    PASS = np; sessionStorage.setItem('nox_admin_p', np);
+    m.textContent = '已更新,之後請用新通行碼登入'; m.classList.add('ok'); $('#npw').value = '';
+  }catch(err){ m.textContent = '更新失敗'; m.classList.add('err'); }
+});
+
+/* 已有 session 直接進 */
+if(PASS){ tryLogin(PASS).catch(()=>{ sessionStorage.removeItem('nox_admin_p'); }); }
+</script>
+</body>
+</html>

@@ -357,16 +357,16 @@ body.ready .hint{opacity:1}
 <div class="modal" id="mCreator">
   <div class="panel">
     <button class="m-close">✕</button>
-    <div class="reg">
+    <div class="reg" data-kind="creator">
       <div class="reg-body">
         <span class="p-tag">Creator · L1 驗證</span>
         <h3>創作者入駐</h3>
         <p class="p-sub">送出後進入策展佇列,由團隊人工審核。</p>
-        <div class="field"><label>姓名 / 暱稱 *</label><input type="text" data-req placeholder="你希望被如何稱呼"></div>
-        <div class="field"><label>EMAIL *</label><input type="email" data-req placeholder="you@example.com"></div>
-        <div class="field"><label>作品連結 *</label><input type="url" data-req placeholder="可訪問的網站、原型或成果連結"></div>
-        <div class="field"><label>主要類別</label><select><option>3D / WebGL</option><option>AI 產品</option><option>互動設計</option><option>影像</option><option>聲音</option><option>其他</option></select></div>
-        <div class="field"><label>簡短自介</label><textarea placeholder="一段話介紹你與這件作品"></textarea></div>
+        <div class="field"><label>姓名 / 暱稱 *</label><input type="text" data-req data-k="name" placeholder="你希望被如何稱呼"></div>
+        <div class="field"><label>EMAIL *</label><input type="email" data-req data-k="email" placeholder="you@example.com"></div>
+        <div class="field"><label>作品連結 *</label><input type="url" data-req data-k="work_url" placeholder="可訪問的網站、原型或成果連結"></div>
+        <div class="field"><label>主要類別</label><select data-k="category"><option>3D / WebGL</option><option>AI 產品</option><option>互動設計</option><option>影像</option><option>聲音</option><option>其他</option></select></div>
+        <div class="field"><label>簡短自介</label><textarea data-k="bio" placeholder="一段話介紹你與這件作品"></textarea></div>
         <label class="agree"><input type="checkbox" data-req>我已閱讀並同意安全條例與服務條款,並知悉需通過 L1 證件與資歷驗證。</label>
         <button class="tlink" data-terms>查看安全條例</button>
         <button class="submit">送交策展審核</button>
@@ -384,15 +384,15 @@ body.ready .hint{opacity:1}
 <div class="modal" id="mInvestor">
   <div class="panel">
     <button class="m-close">✕</button>
-    <div class="reg">
+    <div class="reg" data-kind="investor">
       <div class="reg-body">
         <span class="p-tag">Investor · L2 加強驗證</span>
         <h3>投資人・買家白名單</h3>
         <p class="p-sub">白名單制。通過 L2 驗證後開通引薦權限。</p>
-        <div class="field"><label>姓名 *</label><input type="text" data-req placeholder="真實姓名"></div>
-        <div class="field"><label>EMAIL *</label><input type="email" data-req placeholder="you@example.com"></div>
-        <div class="field"><label>公司 / 機構</label><input type="text" placeholder="選填"></div>
-        <div class="field"><label>關注領域</label><select><option>3D / 互動網頁</option><option>AI 應用</option><option>數位藝術</option><option>影像 / 聲音</option><option>不限</option></select></div>
+        <div class="field"><label>姓名 *</label><input type="text" data-req data-k="name" placeholder="真實姓名"></div>
+        <div class="field"><label>EMAIL *</label><input type="email" data-req data-k="email" placeholder="you@example.com"></div>
+        <div class="field"><label>公司 / 機構</label><input type="text" data-k="org" placeholder="選填"></div>
+        <div class="field"><label>關注領域</label><select data-k="focus"><option>3D / 互動網頁</option><option>AI 應用</option><option>數位藝術</option><option>影像 / 聲音</option><option>不限</option></select></div>
         <label class="agree"><input type="checkbox" data-req>我已閱讀並同意安全條例,並知悉 NOX 不經手資金、不提供投資建議,投資決策由本人自行承擔。</label>
         <button class="tlink" data-terms>查看安全條例</button>
         <button class="submit">申請白名單</button>
@@ -417,6 +417,21 @@ window.onerror = function(msg, src, line){
   document.body.appendChild(d);
 };
 /* ═══════════════ 共用 ═══════════════ */
+const SB_URL = 'https://ujkzgglmhhumwrbvndum.supabase.co';
+const SB_KEY = 'sb_publishable_MtJVJQoQoZ_diLrWScEhng_e7m4uroS';
+const SB_H = {'Content-Type':'application/json', apikey:SB_KEY, Authorization:'Bearer '+SB_KEY, Prefer:'return=minimal'};
+function sbInsert(table, row){
+  return fetch(SB_URL+'/rest/v1/'+table, {method:'POST', headers:SB_H, body:JSON.stringify(row)})
+    .then(r=>{ if(!r.ok) throw new Error('insert failed'); });
+}
+function sbEvent(ev, meta){
+  try{
+    fetch(SB_URL+'/rest/v1/demo_events', {method:'POST', keepalive:true, headers:SB_H,
+      body:JSON.stringify({event:ev, meta:meta||null, ua:navigator.userAgent.slice(0,180)})}).catch(()=>{});
+  }catch(e){}
+}
+sbEvent('page_view', {ref: document.referrer || null});
+
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const DPR = Math.min(devicePixelRatio, 2);
 const easeInCubic  = t => t*t*t;
@@ -646,6 +661,7 @@ let pendingDest='wall', gateSeen=false;
 function startDive(dest){
   if(state!=='earth') return;
   pendingDest = dest||'wall';
+  sbEvent('dive', {dest: pendingDest});
   state='diving'; diveT=0; dragging=false;
 }
 document.querySelectorAll('[data-dive]').forEach(b=> b.addEventListener('click', ()=> startDive(b.dataset.dest)));
@@ -929,14 +945,14 @@ function handleDest(){
   pendingDest='wall';
 }
 
-$('#doorCreator').addEventListener('click', ()=>{ gateSeen=true; $('#gate').classList.remove('on'); openModal('#mCreator'); });
-$('#doorInvestor').addEventListener('click', ()=>{ gateSeen=true; $('#gate').classList.remove('on'); openModal('#mInvestor'); });
-$('#gateSkip').addEventListener('click', ()=>{ gateSeen=true; $('#gate').classList.remove('on'); });
+$('#doorCreator').addEventListener('click', ()=>{ sbEvent('gate_creator'); gateSeen=true; $('#gate').classList.remove('on'); openModal('#mCreator'); });
+$('#doorInvestor').addEventListener('click', ()=>{ sbEvent('gate_investor'); gateSeen=true; $('#gate').classList.remove('on'); openModal('#mInvestor'); });
+$('#gateSkip').addEventListener('click', ()=>{ sbEvent('gate_skip'); gateSeen=true; $('#gate').classList.remove('on'); });
 $('#gNavTerms').addEventListener('click', ()=> openModal('#mTerms'));
 $('#gNavJoin').addEventListener('click', ()=> $('#gate').classList.add('on'));
 $('#aboutJoin').addEventListener('click', ()=> $('#gate').classList.add('on'));
 document.querySelectorAll('[data-terms]').forEach(b=> b.addEventListener('click', ()=> openModal('#mTerms')));
-$('#backBtn').addEventListener('click', closeAllOverlays);
+$('#backBtn').addEventListener('click', ()=>{ sbEvent('back_to_earth'); closeAllOverlays(); });
 
 /* 表單:必填驗證 + 成功狀態(原型示意,正式版接 Supabase) */
 document.querySelectorAll('.reg').forEach(reg=>{
@@ -950,8 +966,25 @@ document.querySelectorAll('.reg').forEach(reg=>{
     const em = reg.querySelector('input[type="email"]');
     if(em && em.value.trim() && !/^\S+@\S+\.\S+$/.test(em.value.trim())){ em.classList.add('bad'); ok = false; }
     if(!ok) return;
-    reg.querySelector('.reg-body').style.display = 'none';
-    reg.querySelector('.reg-done').style.display = 'block';
+    const btn = reg.querySelector('.submit');
+    btn.disabled = true; btn.textContent = '傳送中…';
+    const row = {};
+    reg.querySelectorAll('[data-k]').forEach(f=>{ if(f.value.trim()) row[f.dataset.k] = f.value.trim(); });
+    row.ua = navigator.userAgent.slice(0,180);
+    const kind = reg.dataset.kind || 'creator';
+    sbInsert(kind==='investor' ? 'demo_investor_applications' : 'demo_creator_applications', row)
+      .then(()=>{
+        sbEvent('submit_'+kind);
+        reg.querySelector('.reg-body').style.display = 'none';
+        reg.querySelector('.reg-done').style.display = 'block';
+      })
+      .catch(()=>{
+        btn.disabled = false; btn.textContent = '重新送出';
+        let e = reg.querySelector('.send-err');
+        if(!e){ e = document.createElement('p'); e.className = 'p-note send-err';
+          e.style.color = '#e0937f'; reg.querySelector('.reg-body').appendChild(e); }
+        e.textContent = '連線異常,資料未送出,請再試一次。';
+      });
   });
 });
 </script>
