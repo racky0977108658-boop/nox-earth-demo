@@ -260,6 +260,76 @@ body.role-investor .refer{display:inline-block}
 .refer.sent{color:#9fd0b2;border-color:rgba(123,175,142,.55);pointer-events:none}
 .refer:disabled{opacity:.45;cursor:not-allowed}
 
+/* ── 角色工作室 ── */
+.studio{display:none;margin:0 clamp(16px,4vw,48px) 22px;padding:clamp(22px,3vw,34px);border-radius:16px;
+  background:rgba(14,31,23,.55);border:1px solid rgba(201,169,106,.3);
+  backdrop-filter:blur(24px) saturate(140%);-webkit-backdrop-filter:blur(24px) saturate(140%)}
+.studio.on{display:block}
+.studio-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:6px}
+.studio-head h3{font-weight:300;font-size:clamp(20px,2.6vw,27px);letter-spacing:.06em}
+.seal{display:inline-flex;align-items:center;gap:7px;font-size:11.5px;letter-spacing:.2em;
+  padding:6px 15px;border-radius:999px;white-space:nowrap}
+.seal.ok{color:#1a1408;background:linear-gradient(135deg,var(--gold-lt),var(--gold));
+  box-shadow:0 6px 22px -8px rgba(201,169,106,.6)}
+.seal.wait{color:var(--gold-lt);border:1px solid rgba(201,169,106,.5)}
+.seal.none,.seal.no{color:rgba(242,237,227,.55);border:1px solid rgba(242,237,227,.25)}
+.studio .p-sub{margin-bottom:14px}
+.lockbox{padding:22px;border-radius:12px;text-align:center;
+  border:1px dashed rgba(201,169,106,.4);background:rgba(5,11,7,.25)}
+.lockbox p{font-size:14px;line-height:1.8;color:rgba(242,237,227,.6);margin-bottom:14px}
+.lockbox .a-main{font-family:inherit;font-size:13px;letter-spacing:.18em;cursor:pointer;
+  color:#1a1408;background:linear-gradient(135deg,var(--gold-lt),var(--gold));
+  border:none;padding:12px 26px;border-radius:9px}
+
+.pubform{display:grid;grid-template-columns:1fr 1fr;gap:0 16px;margin-top:8px}
+.pubform .field.full{grid-column:1/-1}
+@media (max-width:640px){.pubform{grid-template-columns:1fr}}
+.file-row{display:flex;align-items:center;gap:12px}
+.file-btn{font-family:inherit;font-size:12.5px;letter-spacing:.14em;cursor:pointer;white-space:nowrap;
+  color:var(--gold-lt);background:rgba(201,169,106,.1);
+  border:1px solid rgba(201,169,106,.45);border-radius:9px;padding:11px 18px}
+.file-name{font-size:12.5px;color:rgba(242,237,227,.5);word-break:break-all}
+.pub-msg{margin-top:10px;font-size:13px;min-height:18px}
+.pub-msg.ok{color:#9fd0b2}.pub-msg.err{color:#e0a294}
+
+.mine{margin-top:24px;border-top:1px solid rgba(201,169,106,.2);padding-top:18px}
+.mine h4{font-weight:400;font-size:14px;letter-spacing:.26em;color:var(--gold);margin-bottom:12px}
+.mine-item{display:flex;align-items:center;gap:14px;padding:10px 0;
+  border-bottom:1px solid rgba(242,237,227,.07);font-size:14.5px}
+.mine-item img{width:52px;height:38px;object-fit:cover;border-radius:6px;flex:none}
+.mine-item .ph{width:52px;height:38px;border-radius:6px;flex:none;
+  background:radial-gradient(120% 120% at 20% 15%,#3d6b52,#0c1c13 65%)}
+.mine-item .chip2{margin-left:auto}
+.chip2{display:inline-block;font-size:11px;letter-spacing:.14em;padding:3px 12px;
+  border-radius:999px;border:1px solid rgba(201,169,106,.5);color:var(--gold-lt);white-space:nowrap}
+.chip2.ok{border-color:rgba(123,175,142,.6);color:#9fd0b2}
+.chip2.no{border-color:rgba(199,123,107,.6);color:#e0a294}
+
+/* 匿名開關 */
+.switch-row{display:flex;align-items:center;gap:14px;margin-top:16px;flex-wrap:wrap}
+.switch{position:relative;width:52px;height:28px;flex:none;cursor:pointer}
+.switch input{opacity:0;width:100%;height:100%;position:absolute;cursor:pointer;margin:0}
+.switch i{position:absolute;inset:0;border-radius:999px;background:rgba(242,237,227,.12);
+  border:1px solid rgba(242,237,227,.25);transition:all .3s}
+.switch i::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;
+  background:var(--bone);transition:all .3s}
+.switch input:checked + i{background:rgba(201,169,106,.4);border-color:var(--gold)}
+.switch input:checked + i::after{left:27px;background:var(--gold-lt)}
+.switch-lab{font-size:14px;color:rgba(242,237,227,.8)}
+.switch-sub{width:100%;font-size:12.5px;color:rgba(242,237,227,.45)}
+
+/* 動態作品卡 */
+.work .cover img{width:100%;height:100%;object-fit:cover;display:block}
+.wlink{display:inline-block;font-size:12.5px;letter-spacing:.12em;color:var(--gold-lt);
+  margin-top:12px;margin-right:14px;text-decoration:underline;text-underline-offset:3px}
+
+/* 註冊身分選擇 */
+.role-pick{display:flex;gap:10px}
+.rp{flex:1;font-family:inherit;font-size:14px;letter-spacing:.1em;cursor:pointer;
+  color:rgba(242,237,227,.75);background:rgba(5,11,7,.45);
+  border:1px solid rgba(242,237,227,.18);border-radius:9px;padding:12px;transition:all .3s}
+.rp.on{color:var(--gold-lt);border-color:var(--gold);background:rgba(201,169,106,.12)}
+
 :focus-visible{outline:1px solid var(--gold-lt);outline-offset:2px}
 ::selection{background:rgba(201,169,106,.4)}
 
@@ -312,6 +382,7 @@ body.role-investor .refer{display:inline-block}
     </div>
   </div>
   <div class="member-bar" id="memberBar"></div>
+  <div class="studio" id="studio"></div>
   <div class="g-grid">
     <div class="work"><div class="cover c1"></div><div class="meta"><div class="tag">3D / WebGL</div><h3>恆域深空</h3><p>捲動敘事黑洞之旅——程序化金屬著色與粒子軌道。</p><button class="refer" data-work="恆域深空">發出引薦</button></div></div>
     <div class="work"><div class="cover c2"></div><div class="meta"><div class="tag">AI / Product</div><h3>策展之眼</h3><p>以視覺語言模型輔助的作品初篩工作流。</p><button class="refer" data-work="策展之眼">發出引薦</button></div></div>
@@ -392,7 +463,28 @@ body.role-investor .refer{display:inline-block}
     <div class="field"><label>密碼</label><input type="password" id="liPass" placeholder="••••••••" autocomplete="current-password"></div>
     <button class="submit" id="liBtn">登入</button>
     <p class="p-note" id="liErr" style="min-height:18px"></p>
-    <p class="p-note">還沒有帳號?先送出創作者或投資人申請,通過驗證後由策展團隊開通。</p>
+    <button class="tlink" id="toSignup">還沒有帳號?免費註冊,即可瀏覽 →</button>
+  </div>
+</div>
+
+<div class="modal" id="mSignup">
+  <div class="panel">
+    <button class="m-close">✕</button>
+    <span class="p-tag">Join NOX</span>
+    <h3>註冊帳號</h3>
+    <p class="p-sub">註冊即可瀏覽作品牆。要上架作品或發出引薦,需再通過身分驗證。</p>
+    <div class="field"><label>姓名 / 暱稱</label><input id="suName" type="text" placeholder="你希望被如何稱呼"></div>
+    <div class="field"><label>EMAIL</label><input id="suEmail" type="email" placeholder="you@example.com" autocomplete="username"></div>
+    <div class="field"><label>密碼(至少 8 碼)</label><input id="suPass" type="password" placeholder="••••••••" autocomplete="new-password"></div>
+    <div class="field"><label>我主要是</label>
+      <div class="role-pick">
+        <button class="rp on" data-role="creator">創作者</button>
+        <button class="rp" data-role="investor">投資人・買家</button>
+      </div>
+    </div>
+    <button class="submit" id="suBtn">建立帳號</button>
+    <p class="p-note" id="suErr" style="min-height:18px"></p>
+    <p class="p-note">建立帳號即代表同意安全條例與服務條款。</p>
   </div>
 </div>
 
@@ -1015,7 +1107,7 @@ function applyUser(){
   $('#navLogin').textContent = label;
   $('#gLogin').textContent = USER ? (USER.name+' · 登出') : '登入';
   const bar = $('#memberBar');
-  if(!USER){ bar.classList.remove('on'); bar.innerHTML=''; return; }
+  if(!USER){ bar.classList.remove('on'); bar.innerHTML=''; renderStudio(); return; }
   let stHtml;
   if(USER.role==='creator'){
     const st = USER.app_status;
@@ -1032,6 +1124,7 @@ function applyUser(){
   }
   bar.classList.add('on');
   $('#mbOut').addEventListener('click', doLogout);
+  renderStudio();
   /* 已引薦的作品標記 */
   const sent = new Set((USER.referrals||[]).map(r=>r.work));
   document.querySelectorAll('.refer').forEach(b=>{
@@ -1074,23 +1167,203 @@ $('#liBtn').addEventListener('click', async ()=>{
 });
 $('#liPass').addEventListener('keydown', e=>{ if(e.key==='Enter') $('#liBtn').click(); });
 
-/* 引薦 */
-document.querySelectorAll('.refer').forEach(b=>{
-  b.addEventListener('click', async ()=>{
-    if(!USER){ openModal('#mLogin'); return; }
-    b.disabled = true; b.textContent='送出中…';
+/* 引薦(事件代理,涵蓋動態上架的作品卡) */
+document.addEventListener('click', async e=>{
+  const b = e.target.closest('.refer'); if(!b || b.classList.contains('sent')) return;
+  if(!USER){ openModal('#mLogin'); return; }
+  b.disabled = true; b.textContent='送出中…';
+  try{
+    await sbRpc('demo_user_refer', {tk: USER.token, wt: b.dataset.work, msg: null});
+    sbEvent('referral', {work: b.dataset.work});
+    b.disabled=false; b.classList.add('sent'); b.textContent='已引薦 ✓';
+    (USER.referrals = USER.referrals||[]).push({work:b.dataset.work});
+    applyUser();
+  }catch(err){
+    b.disabled=false;
+    b.textContent = String(err.message||'').includes('not_whitelisted') ? '需通過 L2 驗證' : '重試引薦';
+  }
+});
+
+/* ═══ 註冊 ═══ */
+let suRole = 'creator';
+document.querySelectorAll('.rp').forEach(b=> b.addEventListener('click', ()=>{
+  document.querySelectorAll('.rp').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on'); suRole = b.dataset.role;
+}));
+$('#toSignup').addEventListener('click', ()=>{ $('#mLogin').classList.remove('on'); openModal('#mSignup'); });
+$('#suBtn').addEventListener('click', async ()=>{
+  const nm=$('#suName').value.trim(), em=$('#suEmail').value.trim(), pw=$('#suPass').value;
+  const err=$('#suErr'); err.textContent='';
+  if(!nm||!em||!pw){ err.textContent='請完整填寫'; return; }
+  if(pw.length<8){ err.textContent='密碼至少 8 碼'; return; }
+  $('#suBtn').disabled=true; $('#suBtn').textContent='建立中…';
+  try{
+    const u = await sbRpc('demo_user_signup', {em, pw, nm, rl:suRole});
+    USER = u; sessionStorage.setItem('nox_user', JSON.stringify(u));
+    sbEvent('signup', {role:suRole});
+    await refreshUser();
+    $('#mSignup').classList.remove('on');
+  }catch(e){
+    const m=String(e.message||'');
+    err.textContent = m.includes('email_taken') ? '這個 Email 已註冊過' :
+                      m.includes('bad_email')   ? 'Email 格式不正確' : '建立失敗,請再試一次';
+  }
+  $('#suBtn').disabled=false; $('#suBtn').textContent='建立帳號';
+});
+
+/* ═══ 工具:轉義 / 預填 / 上傳 ═══ */
+const escH = v => String(v ?? '').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function prefillApply(sel){
+  const m = $(sel);
+  const nameF = m.querySelector('[data-k="name"]'), emF = m.querySelector('[data-k="email"]');
+  if(USER){ if(nameF) nameF.value = USER.name; if(emF) emF.value = USER.email; }
+  openModal(sel);
+}
+async function uploadImage(file){
+  const ext = (file.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'') || 'jpg';
+  const key = 'uploads/' + (crypto.randomUUID ? crypto.randomUUID() : Date.now()+'-'+Math.random().toString(16).slice(2)) + '.' + ext;
+  const r = await fetch(SB_URL+'/storage/v1/object/demo-works/'+key, {method:'POST',
+    headers:{apikey:SB_KEY, Authorization:'Bearer '+SB_KEY, 'Content-Type': file.type||'image/jpeg'},
+    body:file});
+  if(!r.ok) throw new Error(await r.text());
+  return SB_URL+'/storage/v1/object/public/demo-works/'+key;
+}
+
+/* ═══ 角色工作室 ═══ */
+const ROLE_TXT = {creator:'創作者', investor:'投資人'};
+function sealHtml(st, role){
+  if(st==='approved') return `<span class="seal ok">✦ 已驗證${ROLE_TXT[role]}${role==='investor'?' · L2':' · L1'}</span>`;
+  if(st==='pending')  return `<span class="seal wait">驗證審核中</span>`;
+  if(st==='rejected') return `<span class="seal no">驗證未通過</span>`;
+  return `<span class="seal none">未驗證</span>`;
+}
+function renderStudio(){
+  const st = $('#studio');
+  if(!USER){ st.classList.remove('on'); st.innerHTML=''; return; }
+  const vs = USER.app_status;
+  if(USER.role === 'creator'){
+    let body;
+    if(vs === 'approved'){
+      const works = (USER.works||[]).map(w=>`
+        <div class="mine-item">
+          ${w.image_url ? `<img src="${escH(w.image_url)}" alt="">` : '<div class="ph"></div>'}
+          <span>${escH(w.title)}</span>
+          <span class="chip2 ${w.status==='approved'?'ok':w.status==='rejected'?'no':''}">${
+            {pending:'策展審核中',approved:'已上牆',rejected:'未入選'}[w.status]}</span>
+        </div>`).join('');
+      body = `
+      <div class="pubform">
+        <div class="field"><label>作品標題 *</label><input id="wTitle" type="text" placeholder="作品名稱"></div>
+        <div class="field"><label>作品連結</label><input id="wUrl" type="url" placeholder="https://…(可留空)"></div>
+        <div class="field"><label>類別</label><select id="wCat"><option>3D / WebGL</option><option>AI 產品</option><option>互動設計</option><option>影像</option><option>聲音</option><option>其他</option></select></div>
+        <div class="field"><label>封面照片</label>
+          <div class="file-row">
+            <button class="file-btn" id="wImgBtn">選擇照片</button>
+            <span class="file-name" id="wImgName">未選擇(可留空)</span>
+            <input type="file" id="wImg" accept="image/*" style="display:none">
+          </div>
+        </div>
+        <div class="field full"><label>簡介</label><textarea id="wDesc" placeholder="一段話介紹這件作品"></textarea></div>
+        <div class="field full">
+          <button class="submit" id="wPub">送交策展上架</button>
+          <p class="pub-msg" id="wMsg"></p>
+          <p class="p-note">送出後進入策展佇列,審核通過即公開於作品牆。</p>
+        </div>
+      </div>
+      <div class="mine"><h4>我的作品(${(USER.works||[]).length})</h4>${works || '<p class="p-note">尚未上架任何作品。</p>'}</div>`;
+    } else if(vs === 'pending'){
+      body = `<div class="lockbox"><p>你的 L1 身分驗證正在人工審核中,通過後即可上架作品。</p></div>`;
+    } else {
+      body = `<div class="lockbox">
+        <p>上架作品需先通過 L1 身分驗證(證件與資歷人工審核)。<br>註冊帳號可自由瀏覽,驗證通過後解鎖工作室。</p>
+        <button class="a-main" id="stApply">申請創作者驗證</button></div>`;
+    }
+    st.innerHTML = `<div class="studio-head"><h3>創作者工作室</h3>${sealHtml(vs,'creator')}</div>
+      <p class="p-sub">${escH(USER.name)} · ${escH(USER.email)}</p>${body}`;
+    if($('#stApply')) $('#stApply').addEventListener('click', ()=> prefillApply('#mCreator'));
+    if($('#wPub')) bindPublish();
+  } else {
+    let body;
+    if(vs === 'approved'){
+      const rn = (USER.referrals||[]).length;
+      body = `
+      <div class="switch-row">
+        <label class="switch"><input type="checkbox" id="anonTg" ${USER.is_anonymous?'checked':''}><i></i></label>
+        <span class="switch-lab">對外保密身分</span>
+        <span class="switch-sub">開啟後,你發出的引薦對外顯示為「匿名投資人」;平台端仍保有完整驗證紀錄。目前狀態:${USER.is_anonymous?'保密中':'公開'}</span>
+      </div>
+      <p class="p-note" style="margin-top:16px">已發出引薦:${rn} 筆。在作品牆的卡片上點「發出引薦」即可與創作者建立連結。</p>`;
+    } else if(vs === 'pending'){
+      body = `<div class="lockbox"><p>你的 L2 加強驗證正在審核中,通過後即可發出引薦並設定匿名選項。</p></div>`;
+    } else {
+      body = `<div class="lockbox">
+        <p>發出引薦需先通過 L2 加強驗證(公司登記/在職證明/投資紀錄擇一)。<br>註冊帳號可自由瀏覽,驗證通過後開通白名單。</p>
+        <button class="a-main" id="stApply">申請投資人驗證</button></div>`;
+    }
+    st.innerHTML = `<div class="studio-head"><h3>投資人室</h3>${sealHtml(vs,'investor')}</div>
+      <p class="p-sub">${escH(USER.name)} · ${escH(USER.email)}</p>${body}`;
+    if($('#stApply')) $('#stApply').addEventListener('click', ()=> prefillApply('#mInvestor'));
+    if($('#anonTg')) $('#anonTg').addEventListener('change', async e=>{
+      try{
+        await sbRpc('demo_user_set_anonymous', {tk:USER.token, anon_on:e.target.checked});
+        USER.is_anonymous = e.target.checked;
+        sessionStorage.setItem('nox_user', JSON.stringify(USER));
+        renderStudio();
+      }catch(err){ e.target.checked = !e.target.checked; }
+    });
+  }
+  st.classList.add('on');
+}
+function bindPublish(){
+  const fi = $('#wImg');
+  $('#wImgBtn').addEventListener('click', ()=> fi.click());
+  fi.addEventListener('change', ()=> $('#wImgName').textContent = fi.files[0] ? fi.files[0].name : '未選擇(可留空)');
+  $('#wPub').addEventListener('click', async ()=>{
+    const t = $('#wTitle').value.trim(), msg = $('#wMsg');
+    msg.className = 'pub-msg';
+    if(!t){ msg.textContent='請填作品標題'; msg.classList.add('err'); return; }
+    const btn = $('#wPub'); btn.disabled = true; btn.textContent = '上架中…';
     try{
-      await sbRpc('demo_user_refer', {tk: USER.token, wt: b.dataset.work, msg: null});
-      sbEvent('referral', {work: b.dataset.work});
-      b.disabled=false; b.classList.add('sent'); b.textContent='已引薦 ✓';
-      (USER.referrals = USER.referrals||[]).push({work:b.dataset.work});
-      applyUser();
+      let img = null;
+      if(fi.files[0]){ btn.textContent='上傳照片中…'; img = await uploadImage(fi.files[0]); }
+      btn.textContent='送交策展中…';
+      await sbRpc('demo_user_add_work', {tk:USER.token, wtitle:t, wurl:$('#wUrl').value.trim(),
+        wimage:img, wdesc:$('#wDesc').value.trim(), wcat:$('#wCat').value});
+      sbEvent('publish_work', {title:t});
+      await refreshUser();
+      const m2 = $('#wMsg'); if(m2){ m2.textContent='已送交策展佇列 ✓'; m2.className='pub-msg ok'; }
     }catch(e){
-      b.disabled=false;
-      b.textContent = String(e.message||'').includes('not_whitelisted') ? '需通過 L2 驗證' : '重試引薦';
+      msg.textContent = '上架失敗,請再試一次'; msg.classList.add('err');
+      btn.disabled = false; btn.textContent = '送交策展上架';
     }
   });
-});
+}
+
+/* ═══ 公開作品牆:載入已入選作品 ═══ */
+async function loadWorks(){
+  try{
+    const r = await fetch(SB_URL+'/rest/v1/demo_works?select=*&order=created_at.desc',
+      {headers:{apikey:SB_KEY, Authorization:'Bearer '+SB_KEY}});
+    if(!r.ok) return;
+    const list = await r.json();
+    document.querySelectorAll('.work.dyn').forEach(el=> el.remove());
+    const grid = document.querySelector('.g-grid');
+    list.reverse().forEach(w=>{
+      const el = document.createElement('div'); el.className = 'work dyn';
+      el.innerHTML = (w.image_url
+          ? `<div class="cover"><img src="${escH(w.image_url)}" alt="" loading="lazy"></div>`
+          : `<div class="cover c1"></div>`)
+        + `<div class="meta"><div class="tag">${escH(w.category||'作品')} · ${escH(w.creator_name)}</div>
+           <h3>${escH(w.title)}</h3><p>${escH(w.description||'')}</p>
+           ${w.url ? `<a class="wlink" href="${escH(w.url)}" target="_blank" rel="noopener noreferrer">查看作品 ↗</a>` : ''}
+           <button class="refer" data-work="${escH(w.title)}">發出引薦</button></div>`;
+      grid.prepend(el);
+    });
+    applyUser();
+  }catch(e){}
+}
+loadWorks();
+
 refreshUser();
 
 /* 表單:必填驗證 + 成功狀態(原型示意,正式版接 Supabase) */

@@ -140,6 +140,14 @@ td a{color:var(--gold-lt)}
   </div>
 
   <div class="card">
+    <h2><small>Works · Curation</small>作品策展佇列</h2>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>時間</th><th>創作者</th><th>標題</th><th>連結 / 圖</th><th>類別 / 簡介</th><th>狀態</th><th>操作</th></tr></thead>
+      <tbody id="tbWorks"></tbody>
+    </table></div>
+  </div>
+
+  <div class="card">
     <h2><small>Referrals</small>引薦紀錄</h2>
     <div class="tbl-wrap"><table style="min-width:520px">
       <thead><tr><th>時間</th><th>投資人</th><th>作品</th><th>訊息</th></tr></thead>
@@ -249,16 +257,26 @@ async function load(){
     <td>${acts('investor', c.id)}</td></tr>`).join('')
     : '<tr><td colspan="7" class="empty">尚無申請</td></tr>';
 
+  /* 作品策展佇列 */
+  const WST = {pending:'待策展', approved:'已上牆', rejected:'未入選'};
+  $('#tbWorks').innerHTML = (d.works||[]).length ? d.works.map(w=>`
+    <tr><td>${fmtT(w.created_at)}</td><td>${esc(w.creator_name)}</td><td>${esc(w.title)}</td>
+    <td>${w.url?`<a href="${esc(w.url)}" target="_blank" rel="noopener noreferrer">連結 ↗</a>`:'—'}${w.image_url?`<br><a href="${esc(w.image_url)}" target="_blank" rel="noopener noreferrer">圖片 ↗</a>`:''}</td>
+    <td>${esc(w.category||'—')}${w.description?'<br><span style="color:rgba(242,237,227,.5)">'+esc(w.description)+'</span>':''}</td>
+    <td><span class="chip ${w.status}">${WST[w.status]}</span></td>
+    <td>${acts('work', w.id)}</td></tr>`).join('')
+    : '<tr><td colspan="7" class="empty">尚無上架作品</td></tr>';
+
   /* 引薦紀錄 */
   $('#tbReferrals').innerHTML = (d.referrals||[]).length ? d.referrals.map(r=>`
-    <tr><td>${fmtT(r.created_at)}</td><td>${esc(r.investor)}<br><span style="color:rgba(242,237,227,.5)">${esc(r.email||'')}</span></td>
+    <tr><td>${fmtT(r.created_at)}</td><td>${esc(r.investor)}${r.anonymous?' <span class="chip pending" style="font-size:10px">對外匿名</span>':''}<br><span style="color:rgba(242,237,227,.5)">${esc(r.email||'')}</span></td>
     <td>${esc(r.work)}</td><td>${esc(r.message||'—')}</td></tr>`).join('')
     : '<tr><td colspan="4" class="empty">尚無引薦</td></tr>';
 
   /* 事件統計 */
   const EVT_TXT = {page_view:'頁面瀏覽', dive:'穿越進入展覽', gate_creator:'雙門選擇:創作者',
     gate_investor:'雙門選擇:投資人', gate_skip:'雙門選擇:訪客', submit_creator:'送出創作者申請',
-    submit_investor:'送出投資人申請', back_to_earth:'返回地球', login:'會員登入', logout:'會員登出', referral:'發出引薦'};
+    submit_investor:'送出投資人申請', back_to_earth:'返回地球', login:'會員登入', logout:'會員登出', referral:'發出引薦', signup:'註冊帳號', publish_work:'上架作品'};
   const rows = Object.entries(ev).sort((a,b)=> b[1]-a[1]);
   $('#tbEvents').innerHTML = rows.length ? rows.map(([k,v])=>
     `<tr><td>${esc(EVT_TXT[k]||k)}</td><td>${v}</td></tr>`).join('')
